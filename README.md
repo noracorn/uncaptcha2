@@ -1,3 +1,21 @@
+## 仮想環境
+cd uncaptcha2
+cd ..
+python -m venv env
+
+## 仮想環境適用
+source env/bin/activate
+
+## ライブラリインストール
+cd uncaptcha2
+pip install -r dependencies.txt
+
+## 設定
+システム環境設定→セキュリティとプライバシー→アクセシビリティでターミナルを足す。iTermだったらそれを足す。
+
+
+
+
 <p align="center"> :warning: This code works on the most recent version of ReCaptcha v2. Only use on sites you control for educational purposes. :warning:</p>
 
 Created in April 2017, [unCaptcha](https://github.com/ecthros/uncaptcha) achieved 85% accuracy defeating Google's ReCaptcha. After the release of this work, Google released an update to ReCaptcha with the following major changes:
