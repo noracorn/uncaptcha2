@@ -7,9 +7,10 @@ import subprocess
 from queryAPI import bing, google, ibm
 
 ''' You'll need to update based on the coordinates of your setup '''
-FIREFOX_ICON_COORDS = (25, 67)  # Location of the Firefox icon on the side toolbar (to left click)
-PRIVATE_COORDS = (178, 69)  # Location of "Open a new Private Window"
-PRIVATE_BROWSER = (800, 443)  # A place where the background of the Private Window will be
+# FIREFOX_ICON_COORDS = (25, 67)  # Location of the Firefox icon on the side toolbar (to left click)
+FIREFOX_ICON_COORDS = (742, 887)  # Location of the Firefox icon on the side toolbar (to left click)
+PRIVATE_COORDS = (775, 708)  # Location of "Open a new Private Window"
+PRIVATE_BROWSER = (100, 610)  # A place where the background of the Private Window will be
 PRIVATE_COLOR = '#25003E'  # The color of the background of the Private Window
 SEARCH_COORDS = (417, 142)  # Location of the Firefox Search box
 REFRESH_COORDS = (181, 137)  # Refresh button
@@ -33,6 +34,7 @@ r = sr.Recognizer()
 def runCommand(command):
     ''' Run a command and get back its output '''
     proc = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+    import ipdb;ipdb.set_trace()
     return proc.communicate()[0].split()[0]
 
 
@@ -40,6 +42,7 @@ def waitFor(coords, color):
     ''' Wait for a coordinate to become a certain color '''
     pyautogui.moveTo(coords)
     numWaitedFor = 0
+    import ipdb;ipdb.set_trace()
     while color != runCommand(
             "eval $(xdotool getmouselocation --shell); xwd -root -silent | convert xwd:- -depth 8 -crop \"1x1+$X+$Y\" txt:- | grep -om1 '#\w\+'"):
         time.sleep(.1)
@@ -54,10 +57,12 @@ def downloadCaptcha():
     print("Opening Firefox")
     pyautogui.moveTo(FIREFOX_ICON_COORDS)
     pyautogui.rightClick()
-    time.sleep(.3)
+    time.sleep(5)
     pyautogui.moveTo(PRIVATE_COORDS)
     pyautogui.click()
-    time.sleep(.5)
+    time.sleep(5)
+
+    import ipdb;ipdb.set_trace()
     if waitFor(PRIVATE_BROWSER, PRIVATE_COLOR) == -1:  # Wait for browser to load
         return -1
 
@@ -108,8 +113,8 @@ def checkCaptcha():
 def runCap():
     try:
         print("Removing old files...")
-        os.system(
-            'rm ./audio.wav 2>/dev/null')  # These files may be left over from previous runs, and should be removed just in case.
+        # 前回のファイルを削除
+        os.system('rm ./audio.wav 2>/dev/null')
         os.system('rm ' + DOWNLOAD_LOCATION + 'audio.mp3 2>/dev/null')
         # First, download the file
         downloadResult = downloadCaptcha()
@@ -153,21 +158,31 @@ def runCap():
         return 3
 
 
+def aaa():
+    result = runCommand("eval $(xdotool getmouselocation --shell); xwd -root -silent | convert xwd:- -depth 8 -crop \"1x1+$X+$Y\" txt:- | grep -om1 '#\w\+'")
+    result = runCommand("eval $(xdotool getmouselocation --shell); xwd -root -silent | convert xwd:- -depth 8 -crop \"1x1+$X+$Y\" txt:- | grep -om1 '#\w\+'")
+    import ipdb;ipdb.set_trace()
+    print("aaa")
+
 if __name__ == '__main__':
-    success = 0
-    fail = 0
-    allowed = 0
+    aaa()
 
-    # Run this forever and print statistics
-    while True:
-        res = runCap()
-        if res == 1:
-            success += 1
-        elif res == 2:  # Sometimes google just lets us in
-            allowed += 1
-        else:
-            fail += 1
 
-        print("SUCCESSES: " + str(success) + " FAILURES: " + str(fail) + " Allowed: " + str(allowed))
-        pyautogui.moveTo(CLOSE_LOCATION)
-        pyautogui.click()
+
+    # success = 0
+    # fail = 0
+    # allowed = 0
+    #
+    # # Run this forever and print statistics
+    # while True:
+    #     res = runCap()
+    #     if res == 1:
+    #         success += 1
+    #     elif res == 2:  # Sometimes google just lets us in
+    #         allowed += 1
+    #     else:
+    #         fail += 1
+    #
+    #     print("SUCCESSES: " + str(success) + " FAILURES: " + str(fail) + " Allowed: " + str(allowed))
+    #     pyautogui.moveTo(CLOSE_LOCATION)
+    #     pyautogui.click()
